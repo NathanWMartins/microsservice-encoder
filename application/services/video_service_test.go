@@ -14,6 +14,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+/*
+Função init é executada automaticamente ao iniciar o pacote.
+Aqui ela carrega as variáveis de ambiente definidas no arquivo .env para uso nos testes.
+*/
 func init() {
 	err := godotenv.Load("../../.env")
 	if err != nil {
@@ -21,6 +25,10 @@ func init() {
 	}
 }
 
+/*
+Função auxiliar que prepara o ambiente de teste.
+Cria um novo vídeo e instancia um repositório com conexão ao banco de dados de teste.
+*/
 func prepare() (*domain.Video, repositories.VideoRepositoryDb) {
 	db := database.NewDbTest()
 	defer db.Close()
@@ -35,8 +43,12 @@ func prepare() (*domain.Video, repositories.VideoRepositoryDb) {
 	return video, repo
 }
 
+/*
+Função de teste principal que valida o fluxo completo do serviço de vídeo:
+download, fragmentação, codificação e finalização.
+Usa require.Nil para garantir que nenhum erro ocorra em cada etapa.
+*/
 func TestVideoServiceDownload(t *testing.T) {
-
 	video, repo := prepare()
 
 	videoService := services.NewVideoService()
